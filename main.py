@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
-import google.generativeai as genai
+from anthropic import AsyncAnthropic
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="."), name="static")
@@ -33,19 +33,18 @@ async def read_js():
 async def generate_report(req: GenerateRequest):
     load_dotenv(override=True)
     
-    api_key = os.getenv("GEMINI_API_KEY", "")
-    if not api_key or api_key == "nhap-gemini-api-key-cua-ban":
+    api_key = os.getenv("ANTHROPIC_API_KEY", "")
+    if not api_key or api_key == "nhap-claude-api-key":
         return {
             "status": "error",
-            "message": "Chưa có API Key Google Gemini. Hãy lấy Key từ Google AI Studio và điền vào file .env"
+            "message": "Chưa có API Key Claude. Hãy lấy Key từ console.anthropic.com và điền vào."
         }
 
-    # Cấu hình API key cho mỗi request
-    genai.configure(api_key=api_key)
+    client = AsyncAnthropic(api_key=api_key)
 
     system_prompt = """
     Bạn là IQI_RealEstateAI, một hệ thống chuyên gia đầu tư phân tích thông minh dựa trên quy trình M1 đến M7.
-    Dữ liệu cần xuất ra là dạng JSON với cấu trúc bắt buộc sau đây (không được thêm văn bản thừa hay code box markdown, chỉ xuất chuỗi JSON thô hợp lệ):
+    Dữ liệu cần xuất ra là dạng JSON với cấu trúc bắt buộc sau đây (không phân tích dài dòng, gửi đúng cấu trúc JSON thô):
     {
       "status": "success",
       "project": "TÊN BĐS CHUẨN HOÁ",
@@ -71,23 +70,21 @@ async def generate_report(req: GenerateRequest):
     """
 
     try:
-        # Sử dụng model Gemini 2.5 Flash rất phù hợp cho response nhanh và chính xác
-        # Ép model trả về JSON thông qua generation_config
-        model = genai.GenerativeModel(
-            'gemini-2.5-flash',
-            generation_config={"response_mime_type": "application/json", "temperature": 0.7}
+        response = await client.messages.create(
+            model="claude-3-5-sonnet-latest",
+            max_tokens=1000,
+            temperature=0.7,
+            system=system_prompt,
+            messages=[
+                {"role": "user", "content": user_prompt}
+            ]
         )
         
-        # Merge prompt lại vì Gemini SDK thiết kế cho việc nối chuỗi dễ dàng ở mode sinh chuỗi
-        full_prompt = system_prompt + "\n\n=== USER INPUT ===\n" + user_prompt
-        
-        response = model.generate_content(full_prompt)
-        
-        result_content = response.text
+        result_content = response.content[0].text
         return json.loads(result_content)
 
     except Exception as e:
         return {
             "status": "error",
-            "message": "Lỗi kết nối Gemini API: " + str(e)
+            "message": "Lỗi kết nối Claude API: " + str(e)
         }
