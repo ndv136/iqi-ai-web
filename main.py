@@ -29,12 +29,21 @@ async def read_css():
 async def read_js():
     return FileResponse("script.js")
 
+@app.get("/api/debug-env")
+async def debug_env():
+    # An toàn: Trả về 5 ký tự đầu của API key để kiểm tra xem Render có thực sự đẩy Biến lên không.
+    val = os.getenv("ANTHROPIC_API_KEY", "TRONG_KHONG_CO_GI")
+    masked = val[:5] + "..." if val != "TRONG_KHONG_CO_GI" else val
+    return {
+        "status": "debug",
+        "has_render_var": "RENDER" in os.environ,
+        "anthropic_key_starts_with": masked,
+        "all_keys": list(os.environ.keys())
+    }
+
 @app.post("/api/generate")
 async def generate_report(req: GenerateRequest):
-    # Khắc phục triệt để lỗi xung đột biến môi trường trên Đám mây
-    if not os.getenv("RENDER"):
-        load_dotenv()
-    
+    # TẮT HOÀN TOÀN TÍNH NĂNG ĐỌC FILE ẢO ĐỂ BẮT MÁY CHỦ MỸ NHẬN DIỆN KHÓA TRỰC TIẾP TỪ RENDER
     api_key = os.getenv("ANTHROPIC_API_KEY", "").strip()
     if not api_key or api_key == "nhap-claude-api-key":
         return {
