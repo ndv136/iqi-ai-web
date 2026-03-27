@@ -31,7 +31,7 @@ async def read_js():
 
 @app.post("/api/generate")
 async def generate_report(req: GenerateRequest):
-    load_dotenv(override=True)
+    load_dotenv() # Fix conflict with Render Env
     
     api_key = os.getenv("ANTHROPIC_API_KEY", "")
     if not api_key or api_key == "nhap-claude-api-key":
