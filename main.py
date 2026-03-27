@@ -31,9 +31,11 @@ async def read_js():
 
 @app.post("/api/generate")
 async def generate_report(req: GenerateRequest):
-    load_dotenv() # Fix conflict with Render Env
+    # Khắc phục triệt để lỗi xung đột biến môi trường trên Đám mây
+    if not os.getenv("RENDER"):
+        load_dotenv()
     
-    api_key = os.getenv("ANTHROPIC_API_KEY", "")
+    api_key = os.getenv("ANTHROPIC_API_KEY", "").strip()
     if not api_key or api_key == "nhap-claude-api-key":
         return {
             "status": "error",
