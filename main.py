@@ -82,7 +82,7 @@ async def generate_report(req: GenerateRequest):
 
     try:
         response = await client.messages.create(
-            model="claude-3-5-sonnet-latest",
+            model="claude-3-5-sonnet-20241022",
             max_tokens=1000,
             temperature=0.7,
             system=system_prompt,
