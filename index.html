@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IQI Real Estate AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob top-left"></div>
+        <div class="blob bottom-right"></div>
+    </div>
+
+    <main class="container">
+        <header class="header">
+            <h1 class="logo">IQI <span class="gradient-text">Real Estate AI</span></h1>
+            <p class="subtitle">Hệ thống phân tích và đóng gói dự án thông minh</p>
+        </header>
+
+        <!-- Generation Form View -->
+        <section id="input-view" class="card glass-effect">
+            <form id="ai-form" class="form">
+                <div class="input-group">
+                    <label for="projectName">Tên / Mô Tả Bất Động Sản</label>
+                    <input type="text" id="projectName" placeholder="Ví dụ: Lumiere Riverside hoặc 123 Nguyễn Văn Linh..." required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="location">Khu Vực (Phường, Quận)</label>
+                    <input type="text" id="location" placeholder="Ví dụ: Quận 2, TP.HCM" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="propertyType">Loại Hình</label>
+                    <select id="propertyType" required>
+                        <option value="" disabled selected>Chọn loại hình BĐS...</option>
+                        <option value="chungcu">Chung Cư / Căn Hộ</option>
+                        <option value="nhapho">Nhà Phố / Biệt Thự</option>
+                        <option value="datnen">Đất Nền</option>
+                        <option value="nghiduong">Du Lịch Nghỉ Dưỡng</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="objective">Chiến Lược Đặc Thù (Tùy chọn)</label>
+                    <input type="text" id="objective" placeholder="VD: Khách mua dòng tiền, cho dân văn phòng thuê">
+                </div>
+
+                <button type="submit" class="btn-primary" id="btn-generate">
+                    <span class="btn-text">KHỞI ĐỘNG HỆ THỐNG AI</span>
+                    <span class="btn-glow"></span>
+                </button>
+            </form>
+        </section>
+
+        <!-- Loading View -->
+        <section id="loading-view" class="card glass-effect hidden">
+            <div class="loading-header">
+                <div class="spinner"></div>
+                <h2>Hệ Thống Đang Trích Xuất Dữ Liệu</h2>
+            </div>
+            
+            <ul class="progress-list" id="progress-list">
+                <li id="step-0" class="pending"><span class="icon">🔍</span> M0_FactCheck: Đóng băng các sự thật pháp lý... <span class="status-badge">Đợi</span></li>
+                <li id="step-1" class="pending"><span class="icon">📡</span> M1_DataScout: Quét bản đồ hạ tầng và giá khu vực... <span class="status-badge">Đợi</span></li>
+                <li id="step-2" class="pending"><span class="icon">📈</span> M2_FinancialAnalyst: Chạy mô hình 11 chỉ số IRR, NPV... <span class="status-badge">Đợi</span></li>
+                <li id="step-3" class="pending"><span class="icon">🎯</span> M3_MarketAnalyst: Phân tích Risk Map 2026-2030... <span class="status-badge">Đợi</span></li>
+                <li id="step-4" class="pending"><span class="icon">👥</span> M4_BuyerPersona: Xây dựng 3 chân dung khách mua... <span class="status-badge">Đợi</span></li>
+                <li id="step-5" class="pending"><span class="icon">✍️</span> M5_SalesContent: Viết Hook TikTok & YouTube... <span class="status-badge">Đợi</span></li>
+                <li id="step-6" class="pending"><span class="icon">🏆</span> M6_ClientReport: Đóng gói Client Report mạ vàng... <span class="status-badge">Đợi</span></li>
+                <li id="step-7" class="pending"><span class="icon">🧲</span> M7_LeadFunnel: Khởi tạo kịch bản chốt Deal... <span class="status-badge">Đợi</span></li>
+            </ul>
+        </section>
+
+        <!-- Result Dashboard View -->
+        <section id="result-view" class="hidden">
+            <div class="dashboard-header">
+                <h2>CĂN HỘ <span id="res-project" class="highlight">ĐANG TẢI...</span> | BÁO CÁO THÀNH CÔNG</h2>
+                <div class="score-badge">Điểm Đầu Tư: <span>8.5</span>/10</div>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Financials -->
+                <div class="card glass-effect dashboard-panel">
+                    <h3>💡 Điểm Sáng Tài Chính (M2)</h3>
+                    <div class="stat-grid">
+                        <div class="stat">
+                            <label>Lợi Xuất Thuê</label>
+                            <div class="value">~5.6<span class="unit">%</span></div>
+                        </div>
+                        <div class="stat">
+                            <label>IRR (5 Năm)</label>
+                            <div class="value">9.5<span class="unit">%</span></div>
+                        </div>
+                        <div class="stat">
+                            <label>Giá Tb/m²</label>
+                            <div class="value">50<span class="unit">Tr</span></div>
+                        </div>
+                    </div>
+                    <p class="summary-text">Tài sản phòng thủ an toàn với sức chống lạm phát vượt trội so với ngân hàng.</p>
+                </div>
+
+                <!-- Market & Personas -->
+                <div class="card glass-effect dashboard-panel">
+                    <h3>🎯 Chân Dung Lõi (M4)</h3>
+                    <div class="persona-highlight">
+                        <h4>Nhà Đầu Tư Tiền Mặt & Expat</h4>
+                        <p>Mua để cho khách nước ngoài (Nhật Bản, Hàn Quốc) thuê. Yêu cầu Sổ hồng và Thu nhập ngay từ ngày đầu.</p>
+                    </div>
+                </div>
+
+                <!-- Funnel Strategy -->
+                <div class="card glass-effect dashboard-panel col-span-2">
+                    <h3>🚀 Kịch Bản Mỏ Vàng (M5) - Tin Nhắn D+0</h3>
+                    <div class="message-box">
+                        <p>"Chào Anh/Chị, em gửi Anh/Chị báo cáo mật khu vực Bình Thạnh. Chỉ với 3.5 tỷ, sổ hồng trao tay, 5 phút qua Quận 1. Đang có tệp khách Nhật thuê 18tr/tháng. Gia đình mình có muốn thẩm định qua thông số 11 tỷ lệ tài chính không ạ?"</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="download-section card glass-effect">
+                <h3>XUẤT BẢN FILE BÁO CÁO (DOCX)</h3>
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="alert('Đang tải file MASTER_PACKAGE_2026.docx (Chỉ dành cho nội bộ)')">
+                        <span class="icon">📁</span> Tải Master Package (Full)
+                    </button>
+                    <button class="btn-premium" onclick="alert('Đang tải file CLIENT_REPORT_2026.docx (Để gửi Khách)')">
+                        <span class="icon">✨</span> Tải Client Report (Bản Gửi Khách VIP)
+                    </button>
+                </div>
+                <button class="btn-text-only" id="btn-recreate">← Chạy Dự Án Khác</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js?v=3"></script>
+</body>
+</html>
