@@ -80,22 +80,39 @@ async def generate_report(req: GenerateRequest):
     Mục tiêu thêm: {req.objective}
     """
 
-    try:
-        response = await client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=1000,
-            temperature=0.7,
-            system=system_prompt,
-            messages=[
-                {"role": "user", "content": user_prompt}
-            ]
-        )
-        
-        result_content = response.content[0].text
-        return json.loads(result_content)
+    models_to_try = [
+        "claude-3-7-sonnet-20250219",
+        "claude-3-5-sonnet-20240620",
+        "claude-3-sonnet-20240229",
+        "claude-3-opus-20240229",
+        "claude-3-haiku-20240307",
+        "claude-2.1"
+    ]
+    
+    last_error = None
+    for model_name in models_to_try:
+        try:
+            response = await client.messages.create(
+                model=model_name,
+                max_tokens=1000,
+                temperature=0.7,
+                system=system_prompt,
+                messages=[
+                    {"role": "user", "content": user_prompt}
+                ]
+            )
+            
+            result_content = response.content[0].text
+            return json.loads(result_content)
 
-    except Exception as e:
-        return {
-            "status": "error",
-            "message": "Lỗi kết nối Claude API: " + str(e)
-        }
+        except Exception as e:
+            last_error = str(e)
+            # Nếu lỗi không phải do tìm không thấy model (ví dụ: hết tiền, sai key), dừng luôn
+            if "not_found_error" not in last_error:
+                break
+            continue
+
+    return {
+        "status": "error",
+        "message": "Lỗi kết nối Claude API: Toàn bộ model bị từ chối / " + (last_error or "")
+    }
