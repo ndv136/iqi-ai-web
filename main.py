@@ -56,11 +56,23 @@ async def generate_report(req: GenerateRequest):
     try:
         genai.configure(api_key=api_key)
         
+        # Đọc dữ liệu sự thật (FACTS)
+        facts_data = ""
+        try:
+            with open("static/data/FACTS_LOCKED.md", "r", encoding="utf-8") as f:
+                facts_data = f.read()
+        except:
+            facts_data = "Chưa có dữ liệu sự thật nào được đính kèm."
+
         # Chọn gemini-2.5-flash (Phiên bản Miễn Phí tốc độ cao có định mức Free Tier > 0)
         model = genai.GenerativeModel('gemini-2.5-flash')
         
         system_prompt = f"""Bạn là một chuyên gia phân tích Bất động sản AI cấp cao tại nhóm IQI... (Đóng vai Giám đốc IQI).
-        Hãy trả về kết quả định dạng JSON nghiêm ngặt theo đúng cấu trúc yêu cầu.
+        Hãy dựa PHẦN LỚN vào Dữ liệu Độ tin cậy cao sau đây để ra quyết định:
+        [DỮ LIỆU SỰ THẬT DỰ ÁN]
+        {facts_data}
+        [/DỮ LIỆU SỰ THẬT]
+        
         Dữ liệu cần xuất ra là dạng JSON với cấu trúc bắt buộc sau đây (không phân tích dài dòng, gửi đúng cấu trúc JSON thô):
         {{
           "status": "success",
@@ -108,3 +120,18 @@ async def generate_report(req: GenerateRequest):
             "status": "error",
             "message": "Lỗi kết nối Gemini API: " + str(e)
         }
+
+class LeadModel(BaseModel):
+    name: str
+    phone: str
+    project: str
+    
+@app.post("/api/lead")
+async def save_lead(req: LeadModel):
+    # Lưu Data vào hệ thống nội bộ tĩnh của IQI
+    try:
+        with open("static/data/LEADS_IQI.csv", "a", encoding="utf-8") as f:
+            f.write(f"{req.name},{req.phone},{req.project}\\n")
+    except:
+        pass
+    return {"status": "success", "message": "Đã lưu Data Khách Hàng"}

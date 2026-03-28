@@ -6,6 +6,8 @@
     <title>IQI Real Estate AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=3">
+    <!-- Thư viện nén PDF Tuyệt mật -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div class="background-blobs">
@@ -76,58 +78,66 @@
 
         <!-- Result Dashboard View -->
         <section id="result-view" class="hidden">
-            <div class="dashboard-header">
-                <h2>CĂN HỘ <span id="res-project" class="highlight">ĐANG TẢI...</span> | BÁO CÁO THÀNH CÔNG</h2>
-                <div class="score-badge">Điểm Đầu Tư: <span>8.5</span>/10</div>
-            </div>
-
-            <div class="dashboard-grid">
-                <!-- Financials -->
-                <div class="card glass-effect dashboard-panel">
-                    <h3>💡 Điểm Sáng Tài Chính (M2)</h3>
-                    <div class="stat-grid">
-                        <div class="stat">
-                            <label>Lợi Xuất Thuê</label>
-                            <div class="value">~5.6<span class="unit">%</span></div>
-                        </div>
-                        <div class="stat">
-                            <label>IRR (5 Năm)</label>
-                            <div class="value">9.5<span class="unit">%</span></div>
-                        </div>
-                        <div class="stat">
-                            <label>Giá Tb/m²</label>
-                            <div class="value">50<span class="unit">Tr</span></div>
-                        </div>
-                    </div>
-                    <p class="summary-text">Tài sản phòng thủ an toàn với sức chống lạm phát vượt trội so với ngân hàng.</p>
+            <!-- Đóng gói Report Box để Chụp khung PDF -->
+            <div id="pdf-container" style="padding: 20px; background: #09090b; border-radius: 15px;">
+                <div class="dashboard-header">
+                    <h2>CĂN HỘ <span id="res-project" class="highlight">ĐANG TẢI...</span> | BÁO CÁO THÀNH CÔNG</h2>
+                    <div class="score-badge">Điểm Đầu Tư: <span>8.5</span>/10</div>
                 </div>
 
-                <!-- Market & Personas -->
-                <div class="card glass-effect dashboard-panel">
-                    <h3>🎯 Chân Dung Lõi (M4)</h3>
-                    <div class="persona-highlight">
-                        <h4>Nhà Đầu Tư Tiền Mặt & Expat</h4>
-                        <p>Mua để cho khách nước ngoài (Nhật Bản, Hàn Quốc) thuê. Yêu cầu Sổ hồng và Thu nhập ngay từ ngày đầu.</p>
+                <div class="dashboard-grid">
+                    <!-- Financials -->
+                    <div class="card glass-effect dashboard-panel">
+                        <h3>💡 Điểm Sáng Tài Chính (M2)</h3>
+                        <div class="stat-grid">
+                            <div class="stat">
+                                <label>Lợi Suất Thuê</label>
+                                <div class="value">~5.6<span class="unit">%</span></div>
+                            </div>
+                            <div class="stat">
+                                <label>IRR (5 Năm)</label>
+                                <div class="value">9.5<span class="unit">%</span></div>
+                            </div>
+                            <div class="stat">
+                                <label>Giá Tb/m²</label>
+                                <div class="value">50<span class="unit">Tr</span></div>
+                            </div>
+                        </div>
+                        <p class="summary-text">Tài sản phòng thủ an toàn với sức chống lạm phát vượt trội so với ngân hàng.</p>
+                    </div>
+
+                    <!-- Market & Personas -->
+                    <div class="card glass-effect dashboard-panel">
+                        <h3>🎯 Chân Dung Lõi (M4)</h3>
+                        <div class="persona-highlight">
+                            <h4>Nhà Đầu Tư Tiền Mặt & Expat</h4>
+                            <p>Mua để cho khách nước ngoài (Nhật Bản, Hàn Quốc) thuê. Yêu cầu Sổ hồng và Thu nhập ngay từ ngày đầu.</p>
+                        </div>
+                    </div>
+
+                    <!-- Funnel Strategy -->
+                    <div class="card glass-effect dashboard-panel col-span-2">
+                        <h3>🚀 Kịch Bản Mỏ Vàng (M5) - Tin Nhắn D+0</h3>
+                        <div class="message-box">
+                            <p>"Chào Anh/Chị..."</p>
+                        </div>
                     </div>
                 </div>
+            </div> <!-- End pdf-container -->
 
-                <!-- Funnel Strategy -->
-                <div class="card glass-effect dashboard-panel col-span-2">
-                    <h3>🚀 Kịch Bản Mỏ Vàng (M5) - Tin Nhắn D+0</h3>
-                    <div class="message-box">
-                        <p>"Chào Anh/Chị, em gửi Anh/Chị báo cáo mật khu vực Bình Thạnh. Chỉ với 3.5 tỷ, sổ hồng trao tay, 5 phút qua Quận 1. Đang có tệp khách Nhật thuê 18tr/tháng. Gia đình mình có muốn thẩm định qua thông số 11 tỷ lệ tài chính không ạ?"</p>
-                    </div>
+            <div class="download-section card glass-effect" style="margin-top: 2rem;">
+                <h3>XUẤT BẢN BÁO CÁO (PDF MẠ VÀNG)</h3>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1rem;">Vui lòng nhập Tên và Hotline để Mở khóa hệ thống tải Báo Cáo VIP (Hệ thống Thu Lead Tự Động Đầu Cuối IQI).</p>
+                <div class="input-group" style="flex-direction: row; justify-content: center; gap: 10px; margin-bottom: 20px;">
+                    <input type="text" id="leadName" placeholder="Tên khách hàng (ví dụ: Khách C.Mai)" style="width: 200px;">
+                    <input type="tel" id="leadPhone" placeholder="SĐT / Zalo" style="width: 150px;">
                 </div>
-            </div>
-
-            <div class="download-section card glass-effect">
-                <h3>XUẤT BẢN FILE BÁO CÁO (DOCX)</h3>
                 <div class="btn-group">
                     <button class="btn-secondary" id="btn-download-master">
-                        <span class="icon">📁</span> Tải Master Package (Full)
+                        <span class="icon">📁</span> Tải Bản Nháp (TXT)
                     </button>
                     <button class="btn-premium" id="btn-download-client">
-                        <span class="icon">✨</span> Tải Client Report (Bản Gửi Khách VIP)
+                        <span class="icon">✨</span> MỞ KHÓA & TẢI PDF (VIP)
                     </button>
                 </div>
                 <button class="btn-text-only" id="btn-recreate">← Chạy Dự Án Khác</button>

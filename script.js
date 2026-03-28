@@ -123,16 +123,36 @@ document.addEventListener('DOMContentLoaded', () => {
             downloadString("MASTER_PACKAGE.json", JSON.stringify(data, null, 2));
         };
         
-        document.getElementById('btn-download-client').onclick = () => {
-            const reportContent = `BÁO CÁO PHÂN TÍCH ĐẦU TƯ BẤT ĐỘNG SẢN IQI (MẢT)\n\n` +
-            `DỰ ÁN: ${data.project}\nĐIỂM ĐẦU TƯ: ${data.score} / 10\n\n` +
-            `[1] THÔNG SỐ TÀI CHÍNH\n- Lợi Suất Thuê Hằng Năm: ${data.financials.yield}%\n` +
-            `- Tỷ Suất Sinh Lời Nội Bộ (IRR 5 năm): ${data.financials.irr}%\n` +
-            `- Chốt Giá Giao Dịch: ${data.financials.price_per_m2} Tr/m2\n\n` +
-            `[2] BẢN THUYẾT MINH KHÁCH HÀNG (PERSONA)\n- Chân Dung: ${data.persona}\n- Động Cơ Mua: ${data.persona_desc}\n\n` +
-            `[3] KỊCH BẢN CHỐT GIAO DỊCH (M5)\n${data.sale_script}\n\n` +
-            `================\n[Hệ thống Sinh Tự Động Bằng Gemini 2.5 Pro - IQI Real Estate AI]`;
-            downloadString(`CLIENT_REPORT_${data.project}.txt`, reportContent);
+        document.getElementById('btn-download-client').onclick = async () => {
+            const leadName = document.getElementById('leadName').value.trim();
+            const leadPhone = document.getElementById('leadPhone').value.trim();
+            
+            if(!leadName || !leadPhone) {
+                alert("❌ HỆ THỐNG YÊU CẦU: Vui lòng nhập Tên và Số điện thoại khách hàng để hệ thống ghi nhận Lead trước khi tải PDF!");
+                return;
+            }
+            
+            // 1. Shoot Lead to Backend
+            try {
+                await fetch('/api/lead', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: leadName, phone: leadPhone, project: data.project })
+                });
+            } catch(e) { console.log(e); }
+            
+            // 2. Generate Beautiful PDF via html2pdf
+            const element = document.getElementById('pdf-container');
+            const opt = {
+              margin:       [10, 10, 10, 10],
+              filename:     `IQI_VIP_REPORT_${data.project.replace(/ /g,"_")}.pdf`,
+              image:        { type: 'jpeg', quality: 0.98 },
+              html2canvas:  { scale: 2, logging: false, useCORS: true, backgroundColor: '#09090b', borderRadius: '15px' },
+              jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+            };
+            
+            alert(`✅ Đã thu thập Lead (${leadName}). Đang tạo Báo cáo PDF Mạ Vàng...`);
+            html2pdf().set(opt).from(element).save();
         };
 
         loadingView.classList.add('hidden');
