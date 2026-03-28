@@ -55,8 +55,8 @@ async def generate_report(req: GenerateRequest):
     try:
         genai.configure(api_key=api_key)
         
-        # Chọn Gemini 1.5 Pro (Ngang ngửa Claude 3.5 Sonnet)
-        model = genai.GenerativeModel('gemini-1.5-pro')
+        # Chọn gemini-pro (Bản gốc siêu ổn định, không bị lỗi 404 v1beta)
+        model = genai.GenerativeModel('gemini-pro')
         
         system_prompt = f"""Bạn là một chuyên gia phân tích Bất động sản AI cấp cao tại nhóm IQI... (Đóng vai Giám đốc IQI).
         Hãy trả về kết quả định dạng JSON nghiêm ngặt theo đúng cấu trúc yêu cầu.
