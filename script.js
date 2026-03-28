@@ -95,6 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    function downloadString(filename, text) {
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+
     function showResults(data) {
         if (!data) return;
         // Inject data into DOM
@@ -107,6 +117,23 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.persona-highlight p').textContent = data.persona_desc;
 
         document.querySelector('.message-box p').textContent = data.sale_script;
+        
+        // Export Logic
+        document.getElementById('btn-download-master').onclick = () => {
+            downloadString("MASTER_PACKAGE.json", JSON.stringify(data, null, 2));
+        };
+        
+        document.getElementById('btn-download-client').onclick = () => {
+            const reportContent = `BÁO CÁO PHÂN TÍCH ĐẦU TƯ BẤT ĐỘNG SẢN IQI (MẢT)\n\n` +
+            `DỰ ÁN: ${data.project}\nĐIỂM ĐẦU TƯ: ${data.score} / 10\n\n` +
+            `[1] THÔNG SỐ TÀI CHÍNH\n- Lợi Suất Thuê Hằng Năm: ${data.financials.yield}%\n` +
+            `- Tỷ Suất Sinh Lời Nội Bộ (IRR 5 năm): ${data.financials.irr}%\n` +
+            `- Chốt Giá Giao Dịch: ${data.financials.price_per_m2} Tr/m2\n\n` +
+            `[2] BẢN THUYẾT MINH KHÁCH HÀNG (PERSONA)\n- Chân Dung: ${data.persona}\n- Động Cơ Mua: ${data.persona_desc}\n\n` +
+            `[3] KỊCH BẢN CHỐT GIAO DỊCH (M5)\n${data.sale_script}\n\n` +
+            `================\n[Hệ thống Sinh Tự Động Bằng Gemini 2.5 Pro - IQI Real Estate AI]`;
+            downloadString(`CLIENT_REPORT_${data.project}.txt`, reportContent);
+        };
 
         loadingView.classList.add('hidden');
         resultView.classList.remove('hidden');

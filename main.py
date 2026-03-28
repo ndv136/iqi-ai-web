@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 
 app = FastAPI()
+load_dotenv() # BẬT ĐỌC BIẾN MÔI TRƯỜNG LOCAL
 app.mount("/static", StaticFiles(directory="."), name="static")
 
 class GenerateRequest(BaseModel):
@@ -55,8 +56,8 @@ async def generate_report(req: GenerateRequest):
     try:
         genai.configure(api_key=api_key)
         
-        # Chọn gemini-2.5-pro (Phiên bản mạnh nhất năm 2026 hiện tại)
-        model = genai.GenerativeModel('gemini-2.5-pro')
+        # Chọn gemini-2.5-flash (Phiên bản Miễn Phí tốc độ cao có định mức Free Tier > 0)
+        model = genai.GenerativeModel('gemini-2.5-flash')
         
         system_prompt = f"""Bạn là một chuyên gia phân tích Bất động sản AI cấp cao tại nhóm IQI... (Đóng vai Giám đốc IQI).
         Hãy trả về kết quả định dạng JSON nghiêm ngặt theo đúng cấu trúc yêu cầu.
@@ -89,7 +90,7 @@ async def generate_report(req: GenerateRequest):
         response = model.generate_content(
             system_prompt + "\n\n" + user_prompt,
             generation_config=genai.types.GenerationConfig(
-                temperature=0.4,
+                temperature=0.0,
             )
         )
         

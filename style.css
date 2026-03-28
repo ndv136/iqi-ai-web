@@ -39,7 +39,6 @@ body {
 .blob {
     position: absolute;
     border-radius: 50%;
-    animation: float 10s infinite alternate ease-in-out;
 }
 
 .blob.top-left {
@@ -98,10 +97,9 @@ body {
 
 /* Glass Card */
 .card {
-    background: var(--glass-bg);
+    background: rgba(20, 20, 25, 0.7);
     border: 1px solid var(--glass-border);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    /* Tắt tính năng Blur ngốn RAM Macbook: */
     border-radius: 20px;
     padding: 2.5rem;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
